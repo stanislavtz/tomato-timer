@@ -1,4 +1,7 @@
 import math
+import time
+
+import pygame
 from tkinter import *
 
 # ---------------------------- CONSTANTS ------------------------------- #
@@ -8,9 +11,9 @@ GREEN = "#379B46"
 YELLOW = "#f7f5dd"
 BACK_GROUND = "#F0CAA3"
 FONT_NAME = "Courier"
-WORK_MIN = 25
-SHORT_BREAK_MIN = 5
-LONG_BREAK_MIN = 15
+WORK_MIN = 0.2
+SHORT_BREAK_MIN = 0.1
+LONG_BREAK_MIN = 0.1
 
 reps = 0
 timer_id = ''
@@ -39,14 +42,24 @@ def start_timer():
         check_marks.config(text=f"{check_marks.cget('text') + '✔'}")
 
     if reps % 8 == 0:
+        pygame.mixer.music.load("sounds/long-break.wav")
+        pygame.mixer.music.play(loops=0)
+        time.sleep(3)
         title_text.config(text="L-Break", fg=RED)
         count_down(long_break_sec)
         check_marks.config(text="")
         reps = 0
     elif reps % 2 == 0:
+        pygame.mixer.music.load("sounds/long-break.wav")
+        pygame.mixer.music.play(loops=0)
+        time.sleep(3)
         title_text.config(text="S-Break", fg=PINK)
         count_down(short_break_sec)
     else:
+        pygame.mixer.music.load("sounds/work-time.wav")
+        pygame.mixer.music.play(loops=0)
+        time.sleep(3)
+        pygame.mixer.music.stop()
         title_text.config(text="Work Time", fg=GREEN)
         count_down(working_sec)
 
@@ -69,6 +82,10 @@ def count_down(time):
 window = Tk()
 window.title("Pomodoro timer")
 window.config(padx=100, pady=50, bg=BACK_GROUND)
+
+pygame.mixer.init()
+
+
 
 title_text = Label(text="Timer", bg=BACK_GROUND, fg=GREEN, font=(FONT_NAME, 28, "bold"))
 title_text.grid(column=1, row=0)
